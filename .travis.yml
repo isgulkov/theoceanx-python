@@ -1,0 +1,28 @@
+os:
+  - linux
+  - osx
+
+language: python
+
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+
+install:
+  - pip install -r requirements.txt
+  - pip install -e .
+  - dump-env --template=.env.example > .env
+
+script:
+  # Beautify to PEP8
+  - autopep8 --in-place --aggressive --aggressive telepy/telepy.py
+  
+  # Coverage
+  - coverage run telepy/telepy.py
+  - coverage xml
+  - export CODACY_PROJECT_TOKEN=${CODACY_PROJECT_TOKEN}
+  - python-codacy-coverage -r coverage.xml
+
+  # Tests
+  - python -m unittest discover -s tests -p '*_test.py'

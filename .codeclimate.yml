@@ -1,0 +1,35 @@
+fetch:
+  - "https://raw.githubusercontent.com/Ivan-Istomin/theoceanx-python/master/.codeclimate.yml"
+engines:
+ duplication:
+   enabled: true
+   config:
+     languages:
+     - pythhon
+ rubocop:
+   enabled: true
+ratings:
+ paths:
+   - "**.py"
+version: "2" 
+checks:
+  similar-code:
+    config:
+      threshold: #overriding will affect all languages
+  identical-code:
+    config:
+      threshold: #overriding will affect all languages
+exclude_paths:
+  - "theoceanx-python/__pycache__"
+  - "tests/__pycache__"
+  - "config/"
+  - "db/"
+  - "dist/"
+  - "features/"
+  - "**/node_modules/"
+  - "script/"
+  - "**/spec/"
+  - "**/test/"
+  - "**/tests/"
+  - "**/vendor/"
+  - "**/*.d.ts"

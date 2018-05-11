@@ -1,0 +1,5 @@
+.env
+.DS_Store
+.vscode/
+theoceanx-python/__pycache__/
+tests/__pycache__/
