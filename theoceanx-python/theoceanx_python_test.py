@@ -29,22 +29,22 @@ print(API_KEY, API_SECRET, ETHEREUM_ADDRESS)
 web3 = Web3(HTTPProvider(WEB3_URL))
 
 
-def signOrder(order):
+def sign_order(order):
     signed_order = order
     signed_order['maker'] = ETHEREUM_ADDRESS
     values = [
-        Web3.toChecksumAddress(signed_order['exchangeContractAddress']),
+        Web3.toChecksumAddress(signed_order['exchange_contract_address']),
         Web3.toChecksumAddress(signed_order['maker']),
         Web3.toChecksumAddress(signed_order['taker']),
-        Web3.toChecksumAddress(signed_order['makerTokenAddress']),
-        Web3.toChecksumAddress(signed_order['takerTokenAddress']),
-        Web3.toChecksumAddress(signed_order['feeRecipient']),
+        Web3.toChecksumAddress(signed_order['maker_token_address']),
+        Web3.toChecksumAddress(signed_order['taker_token_address']),
+        Web3.toChecksumAddress(signed_order['fee_recipient']),
 
-        int(signed_order['makerTokenAmount']),
-        int(signed_order['takerTokenAmount']),
-        int(signed_order['makerFee']),
-        int(signed_order['takerFee']),
-        int(signed_order['expirationUnixTimestampSec']),
+        int(signed_order['maker_token_amount']),
+        int(signed_order['taker_token_amount']),
+        int(signed_order['maker_fee']),
+        int(signed_order['taker_fee']),
+        int(signed_order['expiration_unix_timestamp_sec']),
         int(signed_order['salt'])
     ]
     types = [
@@ -61,26 +61,25 @@ def signOrder(order):
         'uint256',
         'uint256'
     ]
-    orderHash = Web3.soliditySha3(types, values).hex()
-    signed_order['orderHash'] = orderHash
-    hex_signature = web3.eth.sign(ETHEREUM_ADDRESS, hexstr=orderHash).hex()
+    order_hash = Web3.soliditySha3(types, values).hex()
+    signed_order['order_hash'] = order_hash
+    hex_signature = web3.Eth.sign(ETHEREUM_ADDRESS, hexstr=order_hash).hex()
     sig = Web3.toBytes(hexstr=hex_signature)
     v, r, s = Web3.toInt(sig[-1]), Web3.toHex(sig[:32]), Web3.toHex(sig[32:64])
-    ecSignature = {'v': v, 'r': r, 's': s}
-    signed_order['ecSignature'] = ecSignature
+    ec_signature = {'v': v, 'r': r, 's': s}
+    signed_order['ec_signature'] = ec_signature
 
-
-    signed_order['exchangeContractAddress'] = signed_order['exchangeContractAddress'].lower()
+    signed_order['exchange_contract_address'] = signed_order['exchange_contract_address'].lower()
     signed_order['maker'] = signed_order['maker'].lower()
     signed_order['taker'] = signed_order['taker'].lower()
-    signed_order['makerTokenAddress'] = signed_order['makerTokenAddress'].lower()
-    signed_order['takerTokenAddress'] = signed_order['takerTokenAddress'].lower()
-    signed_order['feeRecipient'] = signed_order['feeRecipient'].lower()
+    signed_order['maker_token_address'] = signed_order['maker_token_address'].lower()
+    signed_order['taker_token_address'] = signed_order['taker_token_address'].lower()
+    signed_order['fee_recipient'] = signed_order['fee_recipient'].lower()
 
     return signed_order
 
 
-def authenticated_request(URL, method, body):
+def authenticated_request(url, method, body):
     timestamp = str(int(round(time.time() * 1000)))
     prehash = API_KEY + timestamp + method + \
         json.dumps(body, separators=(',', ':'))
@@ -94,40 +93,44 @@ def authenticated_request(URL, method, body):
         'TOX-ACCESS-TIMESTAMP': timestamp
     }
     request = requests.request(method,
-                               URL,
+                               url,
                                headers=headers,
                                json=body)
 
     return request
 
 
-def new_market_order(baseTokenAddress, quoteTokenAddress, side, orderAmount, feeOption='feeInNative'):
+def new_market_order(
+        base_token_address,
+        quote_token_address,
+        side,
+        order_amount,
+        fee_option='fee_option'):
     reserve_body = {
-        'baseTokenAddress': baseTokenAddress,
-        'quoteTokenAddress': quoteTokenAddress,
+        'base_token_address': base_token_address,
+        'quote_token_address': quote_token_address,
         'side': side,
-        'orderAmount': orderAmount,
-        'feeOption': feeOption
+        'order_amount': order_amount,
+        'fee_option': fee_option
     }
     reserve_request = authenticated_request(
         RESERVE_MARKET_ORDER, 'POST', reserve_body)
     print(reserve_request.text)
-    signed_order = signOrder(json.loads(reserve_request.text)['unsignedOrder'])
-    market_order_ID = json.loads(reserve_request.text)['marketOrderID']
+    signed_order = sign_order(json.loads(reserve_request.text)['unsigned_order'])
+    market_order_id = json.loads(reserve_request.text)['market_order_id']
 
     place_body = {
-        'marketOrderID': market_order_ID,
-        'signedOrder': signed_order
+        'market_order_id': market_order_id,
+        'signed_order': signed_order
     }
 
-    place_request = authenticated_request(
-        PLACE_MARKET_ORDER, 'POST', place_body)
+    # place_request = authenticated_request(PLACE_MARKET_ORDER, 'POST', place_body)
 
-    history_request = authenticated_request(USER_HISTORY, 'GET', {})
+    # history_request = authenticated_request(USER_HISTORY, 'GET', {})
 
-
-new_market_order(
-    '0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570',
-    '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
-    'buy',
-    '123456789012345678')
+# TODO Remove function call
+# new_market_order(
+#     '0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570',
+#     '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+#     'buy',
+#     '123456789012345678')

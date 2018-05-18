@@ -1,5 +1,11 @@
 .env
-.DS_Store
+.DS_*
 .vscode/
 theoceanx-python/__pycache__/
 tests/__pycache__/
+theoceanx-python/api/__pycache__/
+.idea/
+.solarlint/
+.coverage
+coverage.xml
+venv/

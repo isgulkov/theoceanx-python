@@ -1,6 +1,0 @@
-requests
-autopep8
-socketIO_client_nexus
-web3
-dotenv-python
-pprint

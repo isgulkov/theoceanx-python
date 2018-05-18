@@ -55,7 +55,7 @@ setup(
         "requests",
         "autopep8",
         "socketIO_client_nexus",
-        "web3"
+        "web3", 'aiohttp'
     ],
     tests_require=[
         "nose",

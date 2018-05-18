@@ -1,11 +1,19 @@
 fetch:
   - "https://raw.githubusercontent.com/Ivan-Istomin/theoceanx-python/master/.codeclimate.yml"
+plugins:
+  editorconfig:
+    enabled: true
+    channel: beta
+  pep8:
+    enabled: true
+  sonar-python:
+    enabled: true
 engines:
  duplication:
    enabled: true
    config:
      languages:
-     - pythhon
+     - python
  rubocop:
    enabled: true
 ratings:
