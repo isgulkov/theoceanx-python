@@ -15,7 +15,7 @@ class MarketAPI:
     def get_pairs(self):
         """Return all tradeable token pairs on The Ocean X."""
 
-        return self._request(path='/token_pairs')
+        return self._request('/token_pairs')
 
     def get_ticker(self, base_token_address, quote_token_address):
         """Return 24 hour trading activity for a token pair.
@@ -67,8 +67,10 @@ class MarketAPI:
 
     # qs = {'key1': 'value1', 'key2': 'value2'} GET Parameters
     async def _request(self, path, qs={}, payload=''):
+        url = self.BASE_URL + path
+
         async with ClientSession() as session:
-            async with session.get(headers=self.HEADERS, url=self.BASE_URL, path=path, params=qs, data=payload) as r:
+            async with session.get(url, headers=self.HEADERS, params=qs, data=payload) as r:
                 r = await r.read()
                 print(r)
 
@@ -78,4 +80,4 @@ m = MarketAPI()
 token_pair = m.get_pairs()
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(token_pair())
+loop.run_until_complete(token_pair)
