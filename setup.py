@@ -32,7 +32,7 @@ def clean_readme(fname):
                     or line.startswith('.. toctree')))
 
 
-PACKAGE = 'theoceanx-python'
+PACKAGE = 'theoceanx'
 
 setup(
     name=PACKAGE,
@@ -52,10 +52,11 @@ setup(
     url="https://github.com/Ivan-Istomin/theoceanx-python",
     download_url='https://pypi.org/project/theoceanx-python/',
     install_requires=[
-        "requests",
-        "autopep8",
-        "socketIO_client_nexus",
-        "web3", 'aiohttp'
+        'requests',
+        'autopep8',
+        'socketIO_client_nexus',
+        'web3',
+        'aiohttp'
     ],
     tests_require=[
         "nose",
