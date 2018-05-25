@@ -1,8 +1,10 @@
-from .api import market_api as market
+from .api.market_api import MarketAPI
 
 class MarketData:
+    market = MarketAPI()
+
     def token_pairs(self):
-        return market.get_tickers()
+        return self.market.get_tickers()  # TODO: not implemented -- returns None
 
 m = MarketData()
 
